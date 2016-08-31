@@ -28,14 +28,42 @@ const DATA = {
   ]
 }
 
+var type = 'mexican';
+
+var updateType = function(event) {
+    type = event.target.value;
+    updateThePage();
+}
+
+
 function Menu() {
+
+ var items = DATA.items
+    .sort((a,b) => {return a.name > b.name})
+    .filter((item) => {
+        return item.type === type;
+    })
+    .map((item) => <li className="hot" key={item.id}>{item.name}</li>);
+
   return (
     <div>
-      Open the console, you have failing tests.
+      <h1>{DATA.title}</h1>
+      <ul>
+        {items}
+      </ul>
+      <select name="carlist" form="carform" onChange={updateType}>
+          <option value="mexican">Mexican</option>
+          <option value="english">English</option>
+          <option value="all">All</option>
+        </select>
     </div>
   )
 }
 
-render(<Menu/>, document.getElementById('app'), () => {
-  require('./tests').run()
-})
+function updateThePage() {
+    render(<Menu/>, document.getElementById('app'), () => {
+      require('./tests').run()
+    })
+}
+
+updateThePage();

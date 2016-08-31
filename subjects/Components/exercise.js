@@ -14,6 +14,12 @@
 import React from 'react'
 import { render } from 'react-dom'
 
+const tabType = React.PropTypes.shape({
+    id: React.PropTypes.number.isRequired,
+    name: React.PropTypes.string.isRequired,
+    description: React.PropTypes.string.isRequired
+})
+
 const styles = {}
 
 styles.tab = {
@@ -35,17 +41,39 @@ styles.panel = {
 }
 
 const Tabs = React.createClass({
+    getStyles(index) {
+        return this.state.activeTab === index ? styles.activeTab : styles.tab;
+    },
+    getInitialState() {
+        return {
+            activeTab: 0
+        }
+    },
+    setActiveTab(activeTab) {
+        this.setState({ activeTab }) //fancy syntax for the line below this one
+//        this.setState({ activeTab: activeTab }) //have to use setState
+//        this.state.activeTab = activeTab; //this doesn't work
+    },
+    propTypes: {
+        data: React.PropTypes.array.isRequired
+    },
   render() {
+//    var selectors = this.props.data.map((obj, index) => this.getStyles(index))
     return (
       <div className="Tabs">
-        <div className="Tab" style={styles.activeTab}>
-          Active
+
+        <div className="Tab" style={this.getStyles(0)} onClick={() => this.setActiveTab(0)}>
+            {this.props.data[0].name}
         </div>
-        <div className="Tab" style={styles.tab}>
-          Inactive
+        <div className="Tab" style={this.getStyles(1)} onClick={() => this.setActiveTab(1)}>
+            {this.props.data[1].name}
         </div>
+        <div className="Tab" style={this.getStyles(2)} onClick={() => this.setActiveTab(2)}>
+            {this.props.data[2].name}
+        </div>
+
         <div className="TabPanel" style={styles.panel}>
-          Panel
+            {this.props.data[this.state.activeTab].description}
         </div>
       </div>
     )
@@ -53,6 +81,9 @@ const Tabs = React.createClass({
 })
 
 const App = React.createClass({
+    propTypes: {
+      countries: React.PropTypes.arrayOf(tabType).isRequired
+    },
   render() {
     return (
       <div>
@@ -62,6 +93,8 @@ const App = React.createClass({
     )
   }
 })
+
+
 
 const DATA = [
   { id: 1, name: 'USA', description: 'Land of the Free, Home of the brave' },

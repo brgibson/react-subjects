@@ -3,36 +3,53 @@ import { render } from 'react-dom'
 
 let isOpen = false
 
-function handleClick() {
-  isOpen = !isOpen
-  updateThePage()
-}
 
-function ContentToggle() {
-  let summaryClassName = 'ContentToggle__Summary'
+const ContentToggle = React.createClass({
 
-  if (isOpen)
-    summaryClassName += ' ContentToggle__Summary--is-open'
+    getInitialState: function() {
+        return {
+            isOpen: false
+        }
+    },
 
-  return (
-    <div className="ContentToggle">
-      <button onClick={handleClick} className={summaryClassName}>
-        Tacos
-      </button>
-      {isOpen && (
-        <div className="ContentToggle__Details">
-          <p>A taco is a traditional Mexican dish composed of a corn or wheat tortilla folded or rolled around a filling.</p>
+
+    handleClick: function() {
+      this.setState({
+          isOpen: !this.state.isOpen
+      })
+    },
+
+    render: function() {
+      let summaryClassName = 'ContentToggle__Summary'
+
+      if (isOpen)
+        summaryClassName += ' ContentToggle__Summary--is-open'
+
+      return (
+        <div className="ContentToggle">
+          <button onClick={this.handleClick} className={summaryClassName}>
+            {this.props.title}
+          </button>
+          {this.state.isOpen && (
+            <div className="ContentToggle__Details">
+                {this.props.children}
+            </div>
+          )}
         </div>
-      )}
-    </div>
-  )
-}
+      )
+    }
+});
 
-function updateThePage() {
-  render(<ContentToggle/>, document.getElementById('app'))
-}
-
-updateThePage()
+render((
+    <div>
+        <ContentToggle title="Tacos">
+            <p>A taco is a traditional Mexican dish composed of a corn or wheat tortilla folded or rolled around a filling.</p>
+        </ContentToggle>
+        <ContentToggle title="Burritos">
+            <p>A burrito is a traditional Mexican dish composed of a corn or wheat tortilla folded or rolled around a filling.</p>
+            <p>Fun...</p>
+        </ContentToggle>
+    </div>), document.getElementById('app'))
 
 ////////////////////////////////////////////////////////////////////////////////
 // Let's encapsulate state in an object and call it what it really is. Then, add
