@@ -14,17 +14,48 @@ styles.theremin = {
   display: 'inline-block'
 }
 
-const App = React.createClass({
-  componentDidMount() {
+const Tone = React.createClass({
+   componentDidMount() {
     this.oscillator = createOscillator()
-  },
+    this.doImperativeWork();
+
+    },
+    componentDidUpdate() {
+        this.doImperativeWork();
+    },
+    doImperativeWork() {
+        const { isPlaying, pitch, volume } = this.props;
+
+       if (isPlaying) {
+           this.oscillator.play();
+       } else {
+           this.oscillator.stop();
+       }
+
+       this.oscillator.setPitchBend(pitch)
+       this.oscillator.setVolume(volume)
+    },
+    render() {
+       return null
+   }
+});
+
+
+const Theramin = React.createClass({
+     getInitialState() {
+        return {
+            isPlaying: false,
+            pitch: 0,
+            volume: 0
+        }
+    },
 
   play() {
-    this.oscillator.play()
+    this.setState({isPlaying:true})
   },
 
   stop() {
-    this.oscillator.stop()
+    this.setState({isPlaying:false})
   },
 
   changeTone(event) {
@@ -32,20 +63,38 @@ const App = React.createClass({
     const { top, right, bottom, left } = event.target.getBoundingClientRect()
     const pitch = (clientX - left) / (right - left)
     const volume = 1 - (clientY - top) / (bottom - top)
-    this.oscillator.setPitchBend(pitch)
-    this.oscillator.setVolume(volume)
-  },
 
-  render() {
-    return (
-      <div>
-        <h1>What does it mean to be declarative?</h1>
+    this.setState({
+        pitch, volume
+    })
+  },
+render() {
+    return(
         <div
           style={styles.theremin}
           onMouseEnter={this.play}
           onMouseLeave={this.stop}
           onMouseMove={this.changeTone}
+        >
+            <pre>{JSON.stringify(this.state)}</pre>
+        <Tone
+            isPlaying={this.state.isPlaying}
+            pitch={this.state.pitch}
+            volume={this.state.volume}
         />
+      </div>
+    )
+}
+
+})
+
+const App = React.createClass({
+  render() {
+    return (
+      <div>
+        <h1>What does it mean to be declarative?</h1>
+        <Theramin/>
+      <Theramin/>
       </div>
     )
   }

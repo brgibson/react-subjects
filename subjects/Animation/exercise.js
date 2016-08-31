@@ -38,6 +38,7 @@ const DropGrid = React.createClass({
   },
 
   handleDragStart(event) {
+    this.state.isBeingDragged = true;
     const { x, y } = this.getRelativeXY(event)
     const { offsetLeft, offsetTop } = event.target
 
@@ -63,6 +64,7 @@ const DropGrid = React.createClass({
   },
 
   handleDrop() {
+    this.state.isBeingDragged = false;
     this.setState({ isDraggingMarker: false })
   },
 
@@ -86,7 +88,7 @@ const DropGrid = React.createClass({
     return (
       <div className="grid">
         <Draggable
-          className="marker"
+          className={this.state.isBeingDragged ? "marker is-being-dragged" : "marker"}
           style={markerStyle}
           onDragStart={this.handleDragStart}
           onDrag={this.handleDrag}

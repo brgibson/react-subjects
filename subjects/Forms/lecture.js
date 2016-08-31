@@ -11,7 +11,7 @@ const Forms = React.createClass({
       <div>
         <h1>Forms</h1>
         <form>
-          <input type="text"/>
+          <input type="text" defaultValue="write something"/>
         </form>
       </div>
     )
