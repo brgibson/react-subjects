@@ -54,6 +54,11 @@ class CheckoutForm extends React.Component {
   }
 
   render() {
+    const {
+      shippingName,
+      shippingState
+    } = this.state;
+
     return (
       <div>
         <h1>Checkout</h1>
@@ -75,13 +80,13 @@ class CheckoutForm extends React.Component {
             <legend>Shipping Address</legend>
             <p>
               <label>Shipping Name: <input type="text"
-                                           value={this.state.shippingName}
+                                           value={shippingName}
                                            name="shippingName"
                                            onChange={this.updateShippingValue}/></label>
             </p>
             <p>
               <label>Shipping State: <input type="text"
-                                            value={this.state.shippingState}
+                                            value={shippingState}
                                             size="2"
                                             name="shippingState"
                                             onChange={this.updateShippingValue}/></label>
