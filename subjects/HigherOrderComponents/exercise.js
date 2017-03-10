@@ -5,11 +5,36 @@
 // position to the component as props.
 //
 // Hint: use `event.clientX` and `event.clientY`
-import React, { PropTypes } from 'react'
+import React, {PropTypes} from 'react'
 import ReactDOM from 'react-dom'
 
 const withMousePosition = (Component) => {
-  return Component
+  return class extends React.Component {
+    state = {
+      mouseX: 0,
+      mouseY: 0,
+    }
+
+    getMousePosition = (event) => {
+      this.setState({
+        mouseX: event.clientX,
+        mouseY: event.clientY
+      })
+    };
+
+    componentDidMount() {
+      document.addEventListener('mousemove', this.getMousePosition)
+    }
+
+    render() {
+      return (
+        <Component {...this.props} mouse={{
+          x: this.state.mouseX,
+          y: this.state.mouseY,
+        }}/>
+      )
+    }
+  }
 }
 
 class App extends React.Component {
@@ -21,10 +46,10 @@ class App extends React.Component {
   }
 
   render() {
-    const { mouse } = this.props
+    const {mouse} = this.props
 
     return (
-      <div style={{ height: '100%' }}>
+      <div style={{height: '100%'}}>
         {mouse ? (
           <h1>The mouse position is ({mouse.x}, {mouse.y})</h1>
         ) : (
