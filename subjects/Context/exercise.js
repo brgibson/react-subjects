@@ -17,10 +17,21 @@
 // - Implement a <ResetButton> that resets the <TextInput>s in the form
 //
 ////////////////////////////////////////////////////////////////////////////////
-import React from 'react'
+// import React from 'react'
 import ReactDOM from 'react-dom'
+import React, { PropTypes } from 'react'
 
 class Form extends React.Component {
+  static childContextTypes = {
+     onSubmit: PropTypes.func
+   }
+
+   getChildContext() {
+     return {
+       onSubmit: this.props.onSubmit
+     }
+   }
+
   render() {
     return <div>{this.props.children}</div>
   }
@@ -33,13 +44,21 @@ class SubmitButton extends React.Component {
 }
 
 class TextInput extends React.Component {
+
+   static contextTypes = {
+     onSubmit: PropTypes.func
+   }
+
   render() {
     return (
-      <input
-        type="text"
-        name={this.props.name}
-        placeholder={this.props.placeholder}
-      />
+      <div>
+        <input
+          type="text"
+          name={this.props.name}
+          placeholder={this.props.placeholder}
+          onClick={this.context.onSubmit}
+        />
+      </div>
     )
   }
 }
