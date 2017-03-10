@@ -34,23 +34,39 @@ import ReactDOM from 'react-dom'
 
 class RadioGroup extends React.Component {
   static propTypes = {
-    defaultValue: PropTypes.string
+    value: PropTypes.string
+  }
+
+  componentWillReceiveProps(newProps) {
+    this.setState({selectedValue: newProps.value})
+  }
+
+  state = {
+    selectedValue: this.props.value,
   }
 
   render() {
-    return <div>{this.props.children}</div>
+    const children = React.Children.map(this.props.children, child =>
+      React.cloneElement(child, {
+        isSelected: child.props.value == this.state.selectedValue,
+        onSelect: () => this.setState({selectedValue: child.props.value}),
+      })
+    );
+    return <div>{children}</div>
   }
 }
 
 class RadioOption extends React.Component {
   static propTypes = {
-    value: PropTypes.string
+    value: PropTypes.string,
+    isSelected: PropTypes.bool,
+    onSelect: PropTypes.func,
   }
 
   render() {
     return (
-      <div>
-        <RadioIcon isSelected={false}/> {this.props.children}
+      <div onClick={this.props.onSelect}>
+        <RadioIcon isSelected={this.props.isSelected || false}/> {this.props.children}
       </div>
     )
   }
@@ -80,12 +96,17 @@ class RadioIcon extends React.Component {
 }
 
 class App extends React.Component {
+  state = {
+    radioValue: "tape"
+  }
   render() {
     return (
       <div>
         <h1>♬ It's about time that we all turned off the radio ♫</h1>
 
-        <RadioGroup defaultValue="fm">
+        <button onClick={() => this.setState({radioValue: "fm"})}>Set FM</button>
+
+        <RadioGroup value={this.state.radioValue}>
           <RadioOption value="am">AM</RadioOption>
           <RadioOption value="fm">FM</RadioOption>
           <RadioOption value="tape">Tape</RadioOption>
