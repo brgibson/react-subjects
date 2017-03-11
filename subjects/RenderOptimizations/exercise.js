@@ -23,20 +23,37 @@ class RainbowList extends React.Component {
     renderRowAtIndex: PropTypes.func.isRequired
   }
 
+  state = {
+    numRows: 20,
+    scrollY: 0,
+  }
+
+  componentDidMount = () => {
+    this.setState({scrollY: window.scrollY});
+  }
+
+  loadMore = (event) => {
+    console.log(event.target.scrollTop);
+    console.log(this.state.scrollY);
+    console.log("--");
+    this.setState({numRows: event.target.scrollTop})
+    // this.setState({currentIndex: this.state.currentIndex + 1})
+  }
+
   render() {
     const { numRows, rowHeight, renderRowAtIndex } = this.props
-    const totalHeight = numRows * rowHeight
+    const totalHeight = this.state.numRows * rowHeight
 
     const items = []
 
     let index = 0
-    while (index < numRows) {
+    while (index < this.state.numRows) {
       items.push(<li key={index}>{renderRowAtIndex(index)}</li>)
       index++
     }
 
     return (
-      <div style={{ height: '100%', overflowY: 'scroll' }}>
+      <div onScroll={this.loadMore} style={{ height: '100%', overflowY: 'scroll' }}>
         <ol style={{ height: totalHeight }}>
           {items}
         </ol>
